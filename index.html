@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>用户指南</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: #fff;
+        color: #10141a;
+      }
+
+      .guide {
+        display: flex;
+        height: 100dvh;
+        min-height: 100dvh;
+      }
+
+      .nav {
+        flex: 0 0 280px;
+        width: 280px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 28px 16px 24px;
+        border-right: 1px solid #f0f0f0;
+        overflow: auto;
+      }
+
+      .nav h1,
+      .nav p,
+      .group h2 {
+        margin: 0;
+        padding: 0 12px;
+      }
+
+      .nav h1 {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 28px;
+      }
+
+      .nav > p {
+        margin-top: 8px;
+        color: #666;
+        font-size: 13px;
+        line-height: 20px;
+      }
+
+      .group h2 {
+        margin-bottom: 8px;
+        color: #999;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 18px;
+      }
+
+      .group ul {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .group a {
+        display: block;
+        padding: 10px 12px;
+        border-radius: 8px;
+        color: #333;
+        font-size: 14px;
+        line-height: 22px;
+        text-decoration: none;
+      }
+
+      .group a:hover,
+      .group a.is-active {
+        background: #fff8fa;
+        color: #f40064;
+      }
+
+      .group a:focus-visible {
+        background: #fff8fa;
+        color: #f40064;
+        outline: 2px solid rgba(244, 0, 100, 0.35);
+        outline-offset: 2px;
+      }
+
+      .group a.is-active { font-weight: 500; }
+
+      .content {
+        flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        background: #f8f8f8;
+      }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 24px;
+        background: #fff;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .kicker {
+        margin: 0 0 4px;
+        color: #999;
+        font-size: 12px;
+        line-height: 18px;
+      }
+
+      .toolbar h2 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 24px;
+      }
+
+      .open {
+        flex: 0 0 auto;
+        color: #f40064;
+        font-size: 14px;
+        line-height: 22px;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .open:hover,
+      .open:focus-visible { text-decoration: underline; }
+
+      .hint {
+        margin: 0;
+        padding: 8px 24px;
+        color: #8a8a8a;
+        font-size: 12px;
+        line-height: 18px;
+      }
+
+      .frame {
+        position: relative;
+        flex: 1 1 auto;
+        min-height: 0;
+        background: #fff;
+      }
+
+      iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #fff;
+      }
+
+      .loading {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .loading.is-hidden { display: none; }
+
+      @media (max-width: 800px) {
+        .guide {
+          height: auto;
+          min-height: 100dvh;
+          flex-direction: column;
+        }
+
+        .nav {
+          width: auto;
+          flex-basis: auto;
+          border-right: 0;
+          border-bottom: 1px solid #f0f0f0;
+        }
+
+        .frame { min-height: 70dvh; }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="guide" aria-label="用户指南">
+      <aside class="nav">
+        <div>
+          <h1>用户指南</h1>
+          <p>选择一篇说明，右侧直接展示对应飞书文档。</p>
+        </div>
+        <nav id="toc" aria-label="指南目录"></nav>
+      </aside>
+      <div class="content">
+        <header class="toolbar">
+          <div>
+            <p class="kicker" id="kicker"></p>
+            <h2 id="title"></h2>
+          </div>
+          <a class="open" id="open" target="_blank" rel="noreferrer">在新窗口打开</a>
+        </header>
+        <p class="hint">文档需要访问权限。若正文未出现，请在文档区域内登录飞书，或在新窗口打开。</p>
+        <div class="frame">
+          <div class="loading" id="loading" role="status">文档加载中</div>
+          <iframe id="frame" title="用户指南"></iframe>
+        </div>
+      </div>
+    </section>
+    <script>
+      const docs = [
+        ["wallet-register", "Dowalet 钱包", "(一) 注册登录&认证", "Dowalet 钱包：(一) 注册登录&认证", "https://dowsure88.feishu.cn/docx/KuTAdcskjoqRIwxjraVcvBoKnl3"],
+        ["b2b-account-open", "Dowalet B2B 账户", "(二) 收款账户开通", "Dowalet B2B 账户：(二) 收款账户开通", "https://dowsure88.feishu.cn/docx/O7ppd73UHoJXyBxsAENcxmlinjf"],
+        ["b2b-collection", "Dowalet B2B 账户", "(三) 收款&入账", "Dowalet B2B 账户：(三) 收款&入账", "https://dowsure88.feishu.cn/docx/HrFVd6Sztos7eYxHUn2ckg8cnAc"],
+        ["b2b-withdraw", "Dowalet B2B 账户", "(四) 提现", "Dowalet B2B 账户：(四) 提现", "https://dowsure88.feishu.cn/wiki/I8KkwhTiYilHuAkeOUpcNUkun6b"],
+        ["card-open", "豆星卡 & 豆盈卡", "开卡教程", "Dowalet 钱包：豆星卡 & 豆盈卡 开卡教程", "https://dowsure88.feishu.cn/wiki/NQQBwkonuiaHpJkWHJKc6dG7nEh"],
+        ["card-fees", "豆星卡 & 豆盈卡", "费用说明", "Dowalet 钱包：豆星卡 & 豆盈卡 费用说明", "https://dowsure88.feishu.cn/wiki/WHjbwvyPAiEFe3kCYMYcB5jpnag"]
+      ].map(([id, group, label, title, url]) => ({ id, group, label, title, url }));
+
+      const byId = Object.fromEntries(docs.map((doc) => [doc.id, doc]));
+      const toc = document.querySelector("#toc");
+      const frame = document.querySelector("#frame");
+      const loading = document.querySelector("#loading");
+
+      function selectedDoc() {
+        return byId[new URLSearchParams(location.search).get("doc")] || docs[0];
+      }
+
+      function renderNav(current) {
+        const groups = [];
+        for (const doc of docs) {
+          const last = groups[groups.length - 1];
+          if (last?.name === doc.group) last.docs.push(doc);
+          else groups.push({ name: doc.group, docs: [doc] });
+        }
+        toc.replaceChildren();
+        for (const group of groups) {
+          const section = document.createElement("section");
+          section.className = "group";
+          const heading = document.createElement("h2");
+          heading.textContent = group.name;
+          const list = document.createElement("ul");
+          for (const doc of group.docs) {
+            const item = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = `?doc=${doc.id}`;
+            link.textContent = doc.label;
+            if (doc.id === current.id) {
+              link.className = "is-active";
+              link.setAttribute("aria-current", "page");
+            }
+            item.append(link);
+            list.append(item);
+          }
+          section.append(heading, list);
+          toc.append(section);
+        }
+      }
+
+      function render() {
+        const doc = selectedDoc();
+        document.querySelector("#kicker").textContent = doc.group;
+        document.querySelector("#title").textContent = doc.title;
+        const open = document.querySelector("#open");
+        open.href = doc.url;
+        frame.title = doc.title;
+        loading.classList.remove("is-hidden");
+        frame.src = doc.url;
+        renderNav(doc);
+      }
+
+      frame.addEventListener("load", () => loading.classList.add("is-hidden"));
+      render();
+    </script>
+  </body>
+</html>
