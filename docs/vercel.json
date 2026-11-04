@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "public": true,
+  "installCommand": "cd \"$(git rev-parse --show-toplevel)\" && pnpm install",
+  "buildCommand": "pnpm build"
+}
