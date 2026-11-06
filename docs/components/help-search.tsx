@@ -63,7 +63,7 @@ export function HelpSearch() {
         const response = await pagefind.debouncedSearch(value)
         if (!response || cancelled) return
         const data = await Promise.all(
-          response.results.slice(0, 6).map(result => result.data())
+          response.results.slice(0, 6).map((result: PagefindResult) => result.data())
         )
         if (cancelled) return
         setHits(

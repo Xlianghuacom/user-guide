@@ -18,7 +18,10 @@ export function useTemplateLanguageSelector() {
 
 /** Optional application copy for templates. Without a provider, source copy is unchanged. */
 export function TemplateCopyProvider({ translate, render, children }: CopySettings & { children: ReactNode }) {
-  const settings = useMemo(() => ({ translate, render }), [translate, render]);
+  const settings = useMemo(
+    () => (render ? { translate, render } : { translate }),
+    [translate, render],
+  );
   return <CopyContext.Provider value={settings}>{children}</CopyContext.Provider>;
 }
 

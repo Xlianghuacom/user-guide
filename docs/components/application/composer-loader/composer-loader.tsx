@@ -124,8 +124,10 @@ export function ComposerLoader({
   const [c0, c1, c2, c3] = colors;
   // Gradient center: pure blend of the middle colors, so the band never
   // washes out to white.
-  const mid = `rgb(${hexTriplet(c1)
-    .map((v, i) => Math.round((v + hexTriplet(c2)[i]) / 2))
+  const midLeft = hexTriplet(c1);
+  const midRight = hexTriplet(c2);
+  const mid = `rgb(${midLeft
+    .map((v, i) => Math.round((v + (midRight[i] ?? v)) / 2))
     .join(",")})`;
 
   const band = (arc / 360) * 100;

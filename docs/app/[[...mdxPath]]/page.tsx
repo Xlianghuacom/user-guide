@@ -18,9 +18,9 @@ export default async function Page(props: PageProps<'/[[...mdxPath]]'>) {
   if (!mdxPath?.length) redirect('/docs')
 
   const result = await importPage(mdxPath)
-  const { default: MDXContent, toc, metadata } = result
+  const { default: MDXContent, toc, metadata, sourceCode } = result
   return (
-    <Wrapper toc={toc} metadata={metadata}>
+    <Wrapper toc={toc} metadata={metadata} sourceCode={sourceCode}>
       <MDXContent {...props} params={props.params} />
     </Wrapper>
   )
