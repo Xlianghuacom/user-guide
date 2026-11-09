@@ -3,5 +3,6 @@ export default {
     display: 'hidden'
   },
   opening: '开卡教程',
-  fees: '费用说明'
+  fees: '费用说明',
+  cashback: '消费返现'
 }

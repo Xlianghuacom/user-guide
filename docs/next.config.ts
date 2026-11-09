@@ -11,7 +11,9 @@ export default withNextra({
       { source: '/zh', destination: '/docs', permanent: false },
       { source: '/en', destination: '/docs', permanent: false },
       { source: '/zh/:path*', destination: '/:path*', permanent: false },
-      { source: '/en/:path*', destination: '/:path*', permanent: false }
+      { source: '/en/:path*', destination: '/:path*', permanent: false },
+      { source: '/:path*.html', destination: '/:path*', permanent: false },
+      { source: '/:path*.html/', destination: '/:path*', permanent: false }
     ]
   },
   turbopack: {

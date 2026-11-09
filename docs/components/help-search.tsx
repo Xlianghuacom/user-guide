@@ -68,7 +68,7 @@ export function HelpSearch() {
         if (cancelled) return
         setHits(
           data.map(item => ({
-            url: item.url,
+            url: item.url.replace(/\.html(?=#|$)/, ''),
             title: item.meta?.title || '帮助文档',
             excerpt: item.excerpt || ''
           }))
